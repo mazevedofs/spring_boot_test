@@ -24,15 +24,21 @@ public class ClienteService {
 				.collect(Collectors.toList());
 	}
 	
-	public void removeCliente(int[] lista) {
+	private boolean ok = true;
+	
+	public boolean removeCliente(int[] lista) {
+		ok = true;
 		Arrays.stream(lista).forEach(id -> {
 			Cliente cliente = getCliente(id);
 			if (cliente != null ) {
 				cliente.setDesativado(true);
 				salvar(cliente);
+				
+			} else {
+				ok = false;
 			}
-		
 		});
+		return ok;
 	}
 	
 	public Cliente getCliente(int id) {

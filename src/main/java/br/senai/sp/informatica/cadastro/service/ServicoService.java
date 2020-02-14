@@ -35,11 +35,14 @@ public class ServicoService {
 		repo.save(servico);
 	}
 	
-	public void removeServico(int id) {
+	public boolean removeServico(int id) {
 		var servico = getServico(id);
 		if (servico != null ) {
 			servico.setDesativado(true);
 			salvar(servico);
+			return true;
+		} else {
+			return false;
 		}
 	} 
 	

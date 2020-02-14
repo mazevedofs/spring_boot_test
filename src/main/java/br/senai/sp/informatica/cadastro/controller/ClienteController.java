@@ -1,6 +1,9 @@
 package br.senai.sp.informatica.cadastro.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.senai.sp.informatica.cadastro.component.JsonError;
 import br.senai.sp.informatica.cadastro.model.Cliente;
+import br.senai.sp.informatica.cadastro.model.Servico;
+import br.senai.sp.informatica.cadastro.model.valueObject.ListaDeServicos;
 import br.senai.sp.informatica.cadastro.service.ClienteService;
 import br.senai.sp.informatica.cadastro.service.ServicoService;
 import lombok.var;
@@ -58,11 +63,13 @@ public class ClienteController {
 
 	@RequestMapping("/removeCliente")
 	public ResponseEntity<Object> removeCliente (@RequestBody int[] lista){
-		clienteDao.removeCliente(lista);
-		return ResponseEntity.ok().build();
+		if(clienteDao.removeCliente(lista)) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.unprocessableEntity().build();
 	}
 
-	@RequestMapping("/carregaServicos/{clienteid}")
+	@RequestMapping("/carregaServicos/{clienteId}")
 	public ResponseEntity<Object> carregaServicos(@PathVariable("clienteId") int id){
 		var cliente = clienteDao.getCliente(id);
 		if(cliente != null) {
@@ -71,4 +78,42 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@PostMapping("/selecionaServico")
+	public ResponseEntity<Object> selecionaServico(@RequestBody ListaDeServicos lista) {
+		var cliente = clienteDao.getCliente(lista.getIdCliente());
+		
+		if(cliente != null) {
+			if(cliente.getServicos() == null)
+				cliente.setServicos(new ArrayList<>());
+				
+				var aExcluir = cliente.getServicos().stream()
+						.filter(servico -> !Arrays.stream(lista.getServicos())
+								.filter(srv -> srv.getIdServico() == servico.getIdServico())
+								.findFirst().get().isSelecionado())
+						.collect(Collectors.toList());
+		aExcluir.stream().forEach(servico -> cliente.getServicos()
+				.removeIf(srv -> srv.getIdServico() == servico.getIdServico())
+				);	
+		
+				var aIncluir = Arrays.stream(lista.getServicos())
+						.filter(Servico::isSelecionado).filter(srv -> !cliente.getServicos().contains(srv))
+						.collect(Collectors.toList());
+				aIncluir.stream().forEach(srv -> cliente.getServicos().add(srv));
+				clienteDao.salvar(cliente);
+				return ResponseEntity.ok().build();
+				
+		} else {
+			return ResponseEntity.unprocessableEntity().build();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
