@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import br.senai.sp.informatica.cadastro.model.Autorizacao;
@@ -54,6 +55,11 @@ public class UsuarioService {
 		} else {
 			return false;
 		}
+	}
+	
+	public GrantedAuthority getAutorizacoes(String nome) {
+		Autorizacao autorizacao = auth.findById(nome).orElse(null);
+		return autorizacao != null ? () -> autorizacao.getPerfil() : null;
 	}
 	
 	
