@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class ClienteController {
 	private ServicoService servicoDao;
 
 	@PostMapping("/cadastra")
-	public ResponseEntity<Object> cadastrar(@RequestBody Cliente cliente, 
+	public ResponseEntity<Object> cadastrar(@RequestBody @Valid Cliente cliente, 
 			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.unprocessableEntity()

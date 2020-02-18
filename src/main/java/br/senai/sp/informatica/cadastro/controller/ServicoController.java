@@ -2,6 +2,8 @@ package br.senai.sp.informatica.cadastro.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class ServicoController {
 		
 	@PostMapping("/salvaServico")
 	public ResponseEntity<Object> salvaServico(
-			@RequestBody Servico servico, BindingResult result) {
+			@RequestBody @Valid Servico servico, BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.unprocessableEntity().contentType(MediaType.APPLICATION_JSON)
 					.body(JsonError.build(result));

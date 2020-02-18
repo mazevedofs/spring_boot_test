@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class Servico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idServico;
+	@Size(min=5, max = 150, message = "O nome deve ter de 5 a 15 caracteres")
 	private String nome;
 	private boolean desativado;
 	@Transient

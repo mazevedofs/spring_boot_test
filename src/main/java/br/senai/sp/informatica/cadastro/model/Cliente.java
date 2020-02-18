@@ -10,7 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import br.senai.sp.informatica.cadastro.model.validacao.Logradouro;
 import lombok.Data;
 
 @Data
@@ -19,9 +23,14 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCliente;
+	@Size(min=5, max = 150, message = "O nome deve ter de 5 a 15 caracteres")
 	private String nome;
+	@Logradouro(max=15, message = "O endereco e invalido")
 	private String endereco;
+	@Pattern(regexp="(9[0-9]{4}|[1-9][0-9]{3})-[0-9]{4}", 
+	message = "O numero de telefone e invalido")
 	private String telefone;
+	@Email
 	private String email;
 	private boolean desativado;
 	@ManyToMany(fetch = FetchType.EAGER)
