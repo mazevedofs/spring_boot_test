@@ -7,6 +7,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,9 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService dao;
 	
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/salvaUsuario")
 	public ResponseEntity<Object> salvaUsuario(@RequestBody @Valid Usuario usuario, BindingResult result) {
 		if(result.hasErrors()) {
@@ -31,17 +37,26 @@ public class UsuarioController {
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(JsonError.build(result));
 		} else {
+			usuario.setSenha(encoder.encode(usuario.getSenha()));
 			dao.salvar(usuario);
 			return ResponseEntity.ok().build();
 		}
 	}
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
+	@RequestMapping("/leAutorizacoes/{nome}")
+	public ResponseEntity<GrantedAuthority> getAutorizacoes(
+			@PathVariable("nome") String nome) {
+		return ResponseEntity.ok(dao.getAutorizacoes(nome));		
+	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping("/listaUsuario")
 	public ResponseEntity<List<Usuario>> listaUsuario() {
 		return ResponseEntity.ok(dao.getUsuarios());
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping("/removeUsuario/{nome}")
 	public ResponseEntity<Object> removeUsuario(@PathVariable("nome") String nome) {
 		if (dao.removeUsuario(nome)) {
@@ -51,6 +66,7 @@ public class UsuarioController {
 		}	
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping("/editaUsuario/{nome}")
 	public ResponseEntity<Object> editaUsuario(@PathVariable(value = "nome") String nome) {
 		Usuario usuario = dao.getUsuario(nome);

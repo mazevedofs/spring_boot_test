@@ -11,5 +11,3 @@ public class JwtAuthenticationResponse {
 		this.accessToken = accessToken;
 	}
 }
-
-

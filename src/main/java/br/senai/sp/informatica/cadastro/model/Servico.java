@@ -15,7 +15,8 @@ public class Servico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idServico;
-	@Size(min=5, max = 150, message = "O nome deve ter de 5 a 15 caracteres")
+	@Size(min=5,max=150, 
+			message = "O nome deve ter entre 5 e 15 caracteres")
 	private String nome;
 	private boolean desativado;
 	@Transient
@@ -42,6 +43,7 @@ public class Servico {
 			return false;
 		return true;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -20,29 +20,30 @@ public class ClienteService {
 	}
 	
 	public List<Cliente> getClientes() {
-		return repo.findAll().stream().filter(cliente -> !cliente.isDesativado())
+		return repo.findAll().stream()
+				.filter(cliente -> !cliente.isDesativado())
 				.collect(Collectors.toList());
 	}
 	
-	private boolean ok = true;
+	private boolean ok;
 	
 	public boolean removeCliente(int[] lista) {
 		ok = true;
+		
 		Arrays.stream(lista).forEach(id -> {
 			Cliente cliente = getCliente(id);
-			if (cliente != null ) {
+			if(cliente != null) {
 				cliente.setDesativado(true);
 				salvar(cliente);
-				
 			} else {
 				ok = false;
 			}
 		});
+		
 		return ok;
 	}
 	
 	public Cliente getCliente(int id) {
 		return repo.findById(id).orElse(null);
 	}
-
 }

@@ -23,20 +23,21 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCliente;
-	@Size(min=5, max = 150, message = "O nome deve ter de 5 a 15 caracteres")
+	@Size(min=5,max=150, 
+			message = "O nome deve ter entre 5 e 15 caracteres")
 	private String nome;
-	@Logradouro(max=15, message = "O endereco e invalido")
+	@Logradouro(max=150, message= "O Endereço é inválido")
 	private String endereco;
-	@Pattern(regexp="(9[0-9]{4}|[1-9][0-9]{3})-[0-9]{4}", 
-	message = "O numero de telefone e invalido")
+	@Pattern(regexp="(9[0-9]{4}|[1-9][0-9]{3})-[0-9]{4}",
+			message = "O Nº de telefone é invalido")
 	private String telefone;
 	@Email
 	private String email;
 	private boolean desativado;
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ServicosPrestados", 
+	@JoinTable(name = "ServicosPrestados",
 		joinColumns = { @JoinColumn(name="idCliente") },
-		inverseJoinColumns = { @JoinColumn(name="idServico") } 
+		inverseJoinColumns = { @JoinColumn(name="idServico") }
 	)
 	private List<Servico> servicos;
 }

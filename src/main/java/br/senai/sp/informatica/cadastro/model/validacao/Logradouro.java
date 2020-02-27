@@ -15,8 +15,8 @@ import javax.validation.Payload;
 @Constraint(validatedBy = LogradouroValidator.class)
 public @interface Logradouro {
 	int max() default 0;
-	String message() default ""; 
-	Class<?>[] groups() default{ };
-	Class<? extends Payload>[] payload() default { };
+	String message() default "";
 	
+	Class<?>[] groups() default { };
+	Class<? extends Payload>[] payload() default { };
 }

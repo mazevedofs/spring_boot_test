@@ -14,9 +14,8 @@ import javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = SenhaValidator.class)
 public @interface Senha {
-	String message() default ""; 
+	String message() default "";
 	
-	Class<?>[] groups() default{ };
-	Class<? extends Payload>[] payload() default{ };
-
+	Class<?>[] groups() default { };
+	Class<? extends Payload>[] payload() default { };
 }

@@ -15,13 +15,15 @@ import lombok.Data;
 @Table(name="users")
 public class Usuario {
 	@Id
-	@Size(min = 5, max = 15, message = "O nome deve ter entre 5 e 15 caracters")
 	@Column(name="username")
-	@Senha(message = "A senha nao tem a complexidade exigida" + " os NOs, Maiuscula e #&$%")
+	@Size(min = 5, max = 15,
+			message = "O nome deve ter entre 5 e 15 caracteres")
 	private String nome;
 	@Transient
 	private String old_nome = "";
 	@Column(name="password")
+	@Senha(message="A senha nao tem a complexidade exigida,"
+			+ " os Nºs , Maiuscula e #&$%")
 	private String senha;
 	@Column(name="enabled")
 	private boolean habilitado = true;
@@ -29,5 +31,4 @@ public class Usuario {
 	private boolean administrador;
 	@Transient
 	private boolean editar;
-	
 }

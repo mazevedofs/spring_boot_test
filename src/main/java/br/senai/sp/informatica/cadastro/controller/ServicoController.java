@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +24,14 @@ import br.senai.sp.informatica.cadastro.service.ServicoService;
 public class ServicoController {
 	@Autowired
 	private ServicoService servicoDao;
-		
+	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@PostMapping("/salvaServico")
 	public ResponseEntity<Object> salvaServico(
 			@RequestBody @Valid Servico servico, BindingResult result) {
-		if (result.hasErrors()) {
-			return ResponseEntity.unprocessableEntity().contentType(MediaType.APPLICATION_JSON)
+		if(result.hasErrors()) {
+			return ResponseEntity.unprocessableEntity()
+					.contentType(MediaType.APPLICATION_JSON)
 					.body(JsonError.build(result));
 		} else {
 			servicoDao.salvar(servico);
@@ -41,16 +44,14 @@ public class ServicoController {
 		return ResponseEntity.ok(servicoDao.getServicos());
 	}
 	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@RequestMapping("/removeServico/{idServico}")
 	public ResponseEntity<Object> removeServico(
 			@PathVariable("idServico") int id) {
-				if(servicoDao.removeServico(id)) {
-					return ResponseEntity.ok().build();
-				} else {
-					return ResponseEntity.unprocessableEntity().build();
-				}
-			}
-			
-
-
+		if(servicoDao.removeServico(id)) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.unprocessableEntity().build();
+		}
+	}
 }

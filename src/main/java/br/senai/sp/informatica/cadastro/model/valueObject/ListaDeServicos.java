@@ -7,5 +7,4 @@ import lombok.Data;
 public class ListaDeServicos {
 	private int idCliente;
 	private Servico[] servicos;
-	
 }

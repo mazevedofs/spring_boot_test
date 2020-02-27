@@ -9,21 +9,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 
 @Component
 public class JwtTokenProvider {
 	@Value("${app.jwtSecret}")
 	private String segredo;
 	
-	@Value("${jwtExpirationInMs}")
+	@Value("${app.jwtExpirationInMs}")
 	private int limite;
 	
-	private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     public String criarToken(Authentication autenticacao) {
 
@@ -59,10 +55,8 @@ public class JwtTokenProvider {
         } catch (UnsupportedJwtException ex) {
             logger.error("JWT token nao Suportado");
         } catch (IllegalArgumentException ex) {
-            logger.error("A solicitação no JWT esta vazia.");
+            logger.error("A solicitaÃ§Ã£o no JWT esta vazia.");
         }
         return false;
     }
-	
-	
 }
